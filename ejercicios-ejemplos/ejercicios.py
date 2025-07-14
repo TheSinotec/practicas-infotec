@@ -9,7 +9,7 @@ def area_triangulo():
     """
     Función que valida y calcula el área de un triángulo rectángulo, al recibir sus lados por teclado
     """
-    print("Este algoritmo calcúla el área de un triángulo rectángulo, introduciendo sus lados")
+    print("Este algoritmo calcula el área de un triángulo rectángulo, introduciendo sus lados")
     try:
         lados = []
         lados.append(abs(float(input("Lado A:\n"))))
@@ -38,7 +38,7 @@ def suma_tres_en_tres():
     """
     Función que muestra la serie de la sucesión {3, 6, 9, 12,..., 33}
     """
-    print(sum([3*i for i in range(1,34)]))
+    print(sum([3*i for i in range(1,12)]))
 
 def promedio_nm(n: int, m: int = 0):
 
