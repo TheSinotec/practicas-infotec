@@ -1,5 +1,5 @@
 Algoritmo suma_tres_en_tres
-	//Algoritmo que muestra la serie de la sucesión {3, 6, 9, 12,..., 33}
+	//Algoritmo que muestra la serie de la sucesiÃ³n {3, 6, 9, 12,..., 33}
 	Definir suma Como Entero;
 	suma=0;
 	Para i<-3 Hasta 33 Con Paso 3 Hacer
