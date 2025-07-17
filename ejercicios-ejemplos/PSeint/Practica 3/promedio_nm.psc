@@ -4,12 +4,12 @@ Algoritmo promedio_nm
 	Definir auxiliar Como Real
 	Repetir
 		Limpiar Pantalla;
-		Escribir "Ingrese sólo valores enteros positivos para N (número de alumnos) y M (número de materias)";
-		Escribir "Ingrese el número de alumnos";
+		Escribir "Ingrese sÃ³lo valores enteros positivos para N (nÃºmero de alumnos) y M (nÃºmero de materias)";
+		Escribir "Ingrese el nÃºmero de alumnos";
 		Escribir "";
 		Leer n;
 		Escribir "";
-		Escribir "Ingrese el número de materias";
+		Escribir "Ingrese el nÃºmero de materias";
 		Escribir "";
 		Leer m;
 	Hasta Que (n > 0) Y (m > 0);
@@ -24,7 +24,7 @@ Algoritmo promedio_nm
 				Leer nombres[i];
 			SiNo
 				Escribir "";
-				Escribir "Ingrese la calificación de la materia #", j-1, " del alumno ", nombres[i];
+				Escribir "Ingrese la calificaciÃ³n de la materia #", j-1, " del alumno ", nombres[i];
 				Escribir "";
 				Leer auxiliar;
 				notas[i]=notas[i]+auxiliar;
