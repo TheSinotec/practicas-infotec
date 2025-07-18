@@ -36,9 +36,9 @@ def es_multiplo_seis():
 
 def suma_tres_en_tres():
     """
-    Función que muestra la serie de la sucesión {3, 6, 9, 12,..., 33}
+    Función que muestra la serie de la sucesión {3, 6, 9, 12,..., 99}
     """
-    print(sum([3*i for i in range(1,12)]))
+    print(sum([3*i for i in range(1,34)]))
 
 def promedio_nm(n: int, m: int = 0):
 
