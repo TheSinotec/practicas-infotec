@@ -3,28 +3,35 @@ Funcion newchain <- desencriptar_cadena ( chain, coord )
 	newchain = ""
 	posicion = 1
 	Mientras posicion < Longitud(chain) Hacer
-		extracto = Subcadena(chain, posicion + 2, posicion + 1 + ConvertirANumero(Subcadena(chain,posicion,posicion+1)))
+		extracto = Subcadena(chain, posicion + 3, posicion + 2 + ConvertirANumero(Subcadena(chain,posicion,posicion+2)))
 		i = 1
 		decrypt_frag = ""
 		Mientras i < Longitud(extracto) Hacer
 			decrypt_frag = decrypt_frag + desencriptar_fragmento(Subcadena(extracto, i+2, ConvertirANumero(Subcadena(extracto, i, i+1))+i+1), coord)
 			i = i + 2 + ConvertirANumero(Subcadena(extracto, i, i+1))
 		Fin Mientras
-		si Longitud(decrypt_frag)/2 < 10 Entonces
-			newchain = newchain + "0" + ConvertirATexto(Longitud(decrypt_frag)/2) + decrypt_frag
+		//BOM 3bytes
+		si Longitud(decrypt_frag)/2 < 100 Entonces
+			si Longitud(decrypt_frag)/2 < 10 Entonces
+				newchain = newchain + "00" + ConvertirATexto(Longitud(decrypt_frag)/2) + decrypt_frag
+			SiNo
+				newchain = newchain + "0" + ConvertirATexto(Longitud(decrypt_frag)/2) + decrypt_frag				
+			FinSi
 		SiNo
 			newchain = newchain + ConvertirATexto(Longitud(decrypt_frag)/2) + decrypt_frag
 		FinSi
-		posicion = posicion + 2 + ConvertirANumero(Subcadena(chain, posicion, posicion + 1))
+		Escribir "newchain: ", newchain
+		Escribir "chain: ", chain
+		posicion = posicion + 3 + ConvertirANumero(Subcadena(chain, posicion, posicion + 2))
 	Fin Mientras
 	
 Fin Funcion
 
-//Funcion de encriptacion de cadena
+//Funcion de encriptacion de cadena, doble BOM
 Funcion encriptar_cadena ( chain, coord, newchain Por Referencia)
 	si Longitud(chain) <> 0 Entonces
-		newchain = newchain + encriptar_palabra(Subcadena(chain, 3, 2 + ConvertirANumero(Subcadena(chain,1,2))*2), coord)
-		encriptar_cadena(Subcadena(chain, 3 + ConvertirANumero(Subcadena(chain,1,2))*2, Longitud(chain)), coord, newchain)
+		newchain = newchain + encriptar_palabra(Subcadena(chain, 4, 3 + ConvertirANumero(Subcadena(chain,1,3))*2), coord)
+		encriptar_cadena(Subcadena(chain, 4 + ConvertirANumero(Subcadena(chain,1,3))*2, Longitud(chain)), coord, newchain)
 	FinSi
 Fin Funcion
 
@@ -34,9 +41,13 @@ Funcion newchain <- encriptar_palabra ( chain, coord )
 	Para i<-1 Hasta Longitud(chain) Con Paso 8 Hacer
 		newchain = newchain + encriptar_fragmento(Subcadena(chain, i, 7+i), coord)
 	Fin Para
-	//FINAL BOM
-	Si Longitud(newchain) < 10 Entonces
-		newchain = "0" + ConvertirATexto(Longitud(newchain)) + newchain
+	//FINAL BOM (3 bytes)
+	Si Longitud(newchain) < 100 Entonces
+		si Longitud(newchain) < 10 Entonces
+			newchain = "00" + ConvertirATexto(Longitud(newchain)) + newchain
+		SiNo
+			newchain = "0" + ConvertirATexto(Longitud(newchain)) + newchain
+		FinSi
 	SiNo
 		newchain = ConvertirATexto(Longitud(newchain)) + newchain
 	FinSi
@@ -140,11 +151,14 @@ Funcion newchain <- traductor_cadena_numero ( chain , dic )
 			si j = Longitud(chain) Entonces
 				j = j+1
 			FinSi
-			si j-i-1 < 10 Entonces
-				newchain = newchain + "0" + ConvertirATexto(j-i-1)
+			si j-i-1 < 100 Entonces
+				si j-i-1 < 10 Entonces
+					newchain = newchain + "00" + ConvertirATexto(j-i-1)
+				SiNo
+					newchain = newchain + "0" + ConvertirATexto(j-i-1)
+				FinSi
 			SiNo
 				newchain = newchain + ConvertirATexto(j-i-1)
-				
 			FinSi
 		FinSi
 	Fin Para
@@ -162,8 +176,8 @@ Fin Funcion
 //Traductor de numero a cadena + BOM descompositor
 Funcion newchain <- traductor_numero_cadena ( chain, dic )
 	Si Longitud(chain) <> 0 Entonces
-		newchain = newchain + traductor_numero_palabra(Subcadena(chain, 3, 2 + ConvertirANumero(Subcadena(chain,1,2))*2), dic)
-		newchain = newchain + " " + traductor_numero_cadena(Subcadena(chain,3 + ConvertirANumero(Subcadena(chain,1,2))*2, Longitud(chain)), dic)
+		newchain = newchain + traductor_numero_palabra(Subcadena(chain, 4, 3 + ConvertirANumero(Subcadena(chain,1,3))*2), dic)
+		newchain = newchain + " " + traductor_numero_cadena(Subcadena(chain,4 + ConvertirANumero(Subcadena(chain,1,3))*2, Longitud(chain)), dic)
 	FinSi
 Fin Funcion
 
