@@ -1,3 +1,236 @@
+//Cifrado
+Funcion cifrar
+	Escribir "Para comenzar se requiere que tenga al menos dos llaves de cifrado a la mano."
+	Escribir "Si no las tiene, genérelas en el menú anterior. Puede escapar de esta pantalla en todo momento digitando: X"
+	Escribir "Presione una tecla para continuar:"
+	Esperar Tecla
+	Definir entrada, llave1, llave2 como cadena
+	llave1 = ""
+	llave2 = ""
+	Repetir
+		Limpiar Pantalla
+		Escribir "Ingrese la llave #1 o digite X para salir:"
+		Leer entrada
+	Hasta Que validar_llave(entrada) o Mayusculas(entrada) = "X"
+	Limpiar Pantalla
+	Si Mayusculas(entrada) <> "X" Entonces
+		llave1 = entrada
+		Repetir
+			Limpiar Pantalla
+			Escribir "Ingrese la llave #2 o digite X para salir:"
+			Leer entrada
+			si entrada = llave1 Entonces
+				Escribir "Ingrese una llave diferente a la primera."
+				Escribir "Presione una tecla para continuar:"
+				entrada = ""
+				Esperar Tecla
+			FinSi
+		Hasta Que validar_llave(entrada) o Mayusculas(entrada) = "X"
+		Si Mayusculas(entrada) <> "X" Entonces
+			llave2 = entrada
+		FinSi
+	FinSi
+	Si llave1 = "" o llave2 = "" Entonces
+		Limpiar Pantalla
+	SiNo
+		Limpiar Pantalla
+		//CAPTURA DE TEXTO
+		diccionario = "¿?!¡*+-=/@#%$_.:;,AaBbCcDdEeFfGgHhIiJjKkLlMmNnÑñOoPpQqRrsSTtUuVvWwXxYyZz0123456789()[]{}"
+		Definir dato como cadena
+		Escribir "ATENCIÓN: Lea cuidadosamente."
+		Escribir "Deberá ingresar cada linea de texto de forma individual."
+		Escribir "Cada palabra de cada linea deberá contener a lo más 240 caracteres."
+		Escribir "El programa evaluará cada linea y la reformateará según su diccionario de palabras, y usted deberá confirmar o descartar la linea."
+		Escribir "El programa sólo acepta los siguientes caracteres especiales: " + "¿?!¡*+-=/@#%$_.:;,()[]{}"
+		Escribir "El programa sólo acepta los siguientes caracteres alfanuméricos: " + "AaBbCcDdEeFfGgHhIiJjKkLlMmNnÑñOoPpQqRrsSTtUuVvWwXxYyZz0123456789"
+		Escribir "El programa omitirá caracteres no contenidos en los anteriores casos."
+		Escribir "Presione para continuar.."
+		Esperar Tecla
+		Repetir
+			Limpiar Pantalla
+			dato = ""
+			Escribir "Ingrese una linea de texto o digite & para salir:"
+			Leer entrada
+			//exploit Pseint
+			entrada = limpiar_cadena(entrada, diccionario)
+			entrada = limpiar_cadena(entrada, diccionario)
+			entrada = limpiar_cadena(entrada, diccionario)
+			entrada = limpiar_cadena(entrada, diccionario)
+			Si entrada <> "" Entonces
+				Repetir
+					Limpiar Pantalla
+					Escribir "El programa considerará la siguiente linea:"
+					entrada = limpiar_cadena(entrada, diccionario)
+					Escribir entrada
+					Escribir ""
+					Escribir "¿Desea continuar? [S/N]"
+					Leer dato
+				Hasta Que Mayusculas(dato) = "S" o Mayusculas(dato) = "N"
+				Segun dato Hacer
+					"S":
+						//CRYPT
+						Limpiar Pantalla
+						entrada = formato_espacios(entrada)
+						excepcion = Falso
+						newcadena = traductor_cadena_numero(entrada, diccionario, excepcion)
+						//excepcion verdadero > 240 char
+						si excepcion = Verdadero Entonces
+							Escribir "Una de las palabras contiene más de 240 caracteres. Intente nuevamente, respetando el límite."
+						SiNo
+							//Calculo de polinom, se deben validar las coordenadas
+							Dimension coordenadas[2]
+							obtener_coordenadas(llave1, llave2, coordenadas)
+							//Encriptar
+							final = ""
+							encriptar_cadena(newcadena, coordenadas, final)
+							Escribir  "Su texto fue cifrado y sólo podrá ser recuperado con dos de las tres llaves, su mensaje ahora es:"
+							Escribir final
+							Esperar Tecla
+						FinSi
+					"N":
+						entrada = ""
+					De Otro Modo:
+						entrada = ""
+				Fin Segun
+			FinSi
+		Hasta Que entrada <> "" o Mayusculas(entrada) = "&"
+	FinSi
+Fin Funcion
+
+//Validar llave
+Funcion valido <- validar_llave ( llave )
+	valido = Verdadero
+	guiones = 0
+	llave = formato_espacios(llave)
+	Para i<-1 Hasta Longitud(llave) Con Paso 1 Hacer
+		validar_caracter = Falso
+		Para j<-1 Hasta 11 Con Paso 1 Hacer
+			si Subcadena(llave, i , i) = Subcadena("1234567890_", j, j) Entonces
+				validar_caracter = Verdadero
+				si Subcadena(llave, i , i) = "_" Entonces
+					guiones = guiones + 1
+					Si i = 1 o i = Longitud(llave) Entonces
+						valido = Falso
+					FinSi
+				FinSi
+			FinSi
+		Fin Para
+		Si validar_caracter = Falso Entonces
+			valido = Falso
+		FinSi
+	Fin Para
+	Si guiones <> 1 Entonces
+		valido = Falso
+	FinSi
+	Si valido = Verdadero Entonces
+		i = 1
+		Mientras Subcadena(llave, i, i) <> "_" Hacer
+			i = i+1
+		Fin Mientras
+		si (ConvertirANumero(Subcadena(llave, 1, i-1)) > 999999) o (ConvertirANumero(Subcadena(llave, i+1, Longitud(llave))) > (999999*999999+999999)) o (ConvertirANumero(Subcadena(llave, 1, i-1)) = 0) o (ConvertirANumero(Subcadena(llave, i+1, Longitud(llave))) = 0) Entonces
+			valido = Falso
+		FinSi
+	FinSi
+Fin Funcion
+
+//Menu real
+Funcion real_menu
+	Escribir "AVISO: USTED A INGRESADO AL MODO SECRETO"
+	Escribir "Presione cualquier tecla para comenzar:"
+	Esperar Tecla
+	Limpiar Pantalla
+	Definir menu como cadena
+	Repetir
+		Escribir "Ingrese una opción:"
+		Escribir ""
+		Escribir "LLAVES: Para obtener 3 llaves diferentes y únicas de encriptación (se requieren 2 llaves diferentes para el proceso de cifrado y decifrado)."
+		Escribir ""
+		Escribir "CIFRAR: Para cifrar un texto."
+		Escribir ""
+		Escribir "DESCIFRAR: Para cifrar un texto."
+		Escribir ""
+		Escribir "SALIR: Para regresar a la tapadera."
+		Escribir ""
+		Leer menu
+		Segun Mayusculas(menu) Hacer
+			"LLAVES":
+				Limpiar Pantalla
+				Escribir "GENERANDO LLAVES:"
+				Escribir ""
+				keygen()
+				Escribir ""
+				Escribir "Resguarde sus llaves en un lugar seguro. Recuerde que se requieren al menos dos llaves para cifrar y decifrar."
+				Escribir "Presione una tecla para continuar:"
+				Esperar Tecla
+				Limpiar Pantalla
+			"CIFRAR":
+				Limpiar Pantalla
+				cifrar()
+			"DESCIFRAR":
+				Limpiar Pantalla
+			"SALIR":
+				Limpiar Pantalla
+				menu = Mayusculas(menu)
+			De Otro Modo:
+				Limpiar Pantalla
+				Escribir "ATENCIÓN: OPCIÓN INVÁLIDA"
+		Fin Segun
+	Hasta Que menu = "SALIR"
+	
+Fin Funcion
+
+//Menu tapadera
+Funcion  falso_menu
+	Escribir "Bienvenido al proyecto de Jonatán Salgado Razo"
+	Escribir "Presione cualquier tecla para comenzar:"
+	Esperar Tecla
+	Limpiar Pantalla
+	Definir menu como cadena
+	Repetir
+		Escribir "Ingrese una opción:"
+		Escribir "HORA: Para obtener la hora local."
+		Escribir "FECHA: Para obtener la fecha."
+		Escribir "SALIR: Para obtener la salir del programa."
+		Leer menu
+		Segun Mayusculas(menu) Hacer
+			"HORA":
+				Limpiar Pantalla
+				Escribir "La hora exacta es: " + Subcadena(ConvertirATexto(HoraActual()),1,2) + ":" + Subcadena(ConvertirATexto(HoraActual()),3,4)
+				Escribir ""
+			"FECHA":
+				Limpiar Pantalla
+				Escribir "La fecha de hoy es: " + Subcadena(ConvertirATexto(FechaActual()),7,8) + "/" + Subcadena(ConvertirATexto(FechaActual()),5,6) + "/" + Subcadena(ConvertirATexto(FechaActual()),1,4)
+				Escribir ""
+			"SECRETO":
+				Limpiar Pantalla
+				//inicia la fiesta
+				real_menu()
+			"SALIR":
+				menu = Mayusculas(menu)
+			De Otro Modo:
+				Limpiar Pantalla
+				Escribir "ATENCIÓN: OPCIÓN INVÁLIDA"
+		Fin Segun
+	Hasta Que menu = "SALIR"
+Fin Funcion
+
+//Funcion de restricción de caracteres
+Funcion newchain <- limpiar_cadena ( chain, dic )
+	newchain = formato_espacios(chain)
+	Para i<-1 Hasta Longitud(newchain) Con Paso 1 Hacer
+		bandera_caracter = Falso
+		Para j<-1 Hasta Longitud(dic) Con Paso 1 Hacer
+			si (Subcadena(newchain, i, i) = Subcadena(dic, j, j)) O (Subcadena(newchain, i, i) = " ") Entonces
+				bandera_caracter = Verdadero				
+			FinSi
+		Fin Para
+		si bandera_caracter = Falso Entonces
+			newchain = Subcadena(newchain, 1, i-1) + Subcadena(newchain, i+1, Longitud(newchain))
+		FinSi
+	Fin Para
+	newchain = formato_espacios(newchain)
+Fin Funcion
+
 //Funcion de desencriptación de cadena
 Funcion newchain <- desencriptar_cadena ( chain, coord )
 	newchain = ""
@@ -105,7 +338,6 @@ Funcion keygen
 	Esperar azar(459) Milisegundos
 	termino = azar(999999)
 	Escribir "Llave 3: " + ConvertirATexto(termino) + "_" + ConvertirATexto(coeficiente*termino + independiente)
-	Escribir coeficiente, " ", independiente
 Fin Funcion
 
 //Funcion de formateo de espacios (solo un espacio separador entre palabras)
@@ -128,7 +360,7 @@ Funcion chain <- formato_espacios ( chain )
 Fin Funcion
 
 //Funcion que pasa de cadena a numero + metodología BOM compositor (Byte order mark)
-Funcion newchain <- traductor_cadena_numero ( chain , dic )
+Funcion newchain <- traductor_cadena_numero ( chain , dic, exept Por Referencia)
 	newchain = ""
 	chain = " " +  chain
 	Para i<-1 Hasta Longitud(chain) Con Paso 1 Hacer
@@ -159,6 +391,9 @@ Funcion newchain <- traductor_cadena_numero ( chain , dic )
 				FinSi
 			SiNo
 				newchain = newchain + ConvertirATexto(j-i-1)
+				si j-i-1 > 240
+					exept = Verdadero
+				FinSi
 			FinSi
 		FinSi
 	Fin Para
@@ -182,5 +417,6 @@ Funcion newchain <- traductor_numero_cadena ( chain, dic )
 Fin Funcion
 
 Algoritmo proyecto
-	diccionario = "¿?*+-/@_.:;,AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrsSTtUuVvWwXxYyZz0123456789"
+	diccionario = "¿?!¡*+-=/@#%$_.:;,AaBbCcDdEeFfGgHhIiJjKkLlMmNnÑñOoPpQqRrsSTtUuVvWwXxYyZz0123456789()[]{}"
+	falso_menu()
 FinAlgoritmo
