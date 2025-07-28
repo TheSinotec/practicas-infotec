@@ -3,7 +3,13 @@ Funcion newchain <- desencriptar_cadena ( chain, coord )
 	newchain = ""
 	posicion = 1
 	Mientras posicion < Longitud(chain) Hacer
-		decrypt_frag = desencriptar_fragmento(Subcadena(chain, posicion + 4, posicion + 1 + ConvertirANumero(Subcadena(chain,posicion,posicion+1))), coord)
+		extracto = Subcadena(chain, posicion + 2, posicion + 1 + ConvertirANumero(Subcadena(chain,posicion,posicion+1)))
+		i = 1
+		decrypt_frag = ""
+		Mientras i < Longitud(extracto) Hacer
+			decrypt_frag = decrypt_frag + desencriptar_fragmento(Subcadena(extracto, i+2, ConvertirANumero(Subcadena(extracto, i, i+1))+i+1), coord)
+			i = i + 2 + ConvertirANumero(Subcadena(extracto, i, i+1))
+		Fin Mientras
 		si Longitud(decrypt_frag)/2 < 10 Entonces
 			newchain = newchain + "0" + ConvertirATexto(Longitud(decrypt_frag)/2) + decrypt_frag
 		SiNo
