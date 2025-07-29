@@ -1,9 +1,18 @@
+//Confirmación por teclado
+Funcion pausa ( clean )
+	Escribir ""
+	Escribir "Presione una tecla para continuar.."
+	Esperar Tecla
+	Si clean = Verdadero Entonces
+		Limpiar Pantalla
+	FinSi
+Fin Funcion
+
 //Descifrado
 Funcion decifrar
 	Escribir "Para comenzar se requiere que tenga al menos dos de las llaves de cifrado utilizadas para encriptar el mensaje."
 	Escribir "Si no las tiene, el mensaje no podrá ser desencriptado. Puede escapar de esta pantalla en todo momento digitando: X"
-	Escribir "Presione una tecla para continuar:"
-	Esperar Tecla
+	pausa(Falso)
 	Definir entrada, llave1, llave2 como cadena
 	llave1 = ""
 	llave2 = ""
@@ -21,9 +30,8 @@ Funcion decifrar
 			Leer entrada
 			si entrada = llave1 Entonces
 				Escribir "Ingrese una llave diferente a la primera."
-				Escribir "Presione una tecla para continuar:"
+				pausa(Falso)
 				entrada = ""
-				Esperar Tecla
 			FinSi
 		Hasta Que validar_llave(entrada) o Mayusculas(entrada) = "X"
 		Si Mayusculas(entrada) <> "X" Entonces
@@ -44,8 +52,7 @@ Funcion decifrar
 		Escribir "El programa sólo acepta los siguientes caracteres numéricos: " + diccionario
 		Escribir "El programa omitirá caracteres no contenidos en el caso anterior."
 		Escribir "Si el programa no puede desencriptar el mensaje arrojara la excepción: [<null>]"
-		Escribir "Presione para continuar.."
-		Esperar Tecla
+		pausa(Falso)
 		Repetir
 			Limpiar Pantalla
 			dato = ""
@@ -85,10 +92,7 @@ Funcion decifrar
 						SiNo
 							Escribir palabra
 						FinSi
-						Escribir ""
-						Escribir "Presione una tecla para volver al inicio."
-						Esperar Tecla
-						Limpiar Pantalla
+						pausa(Verdadero)
 					"N":
 						entrada = ""
 					De Otro Modo:
@@ -104,8 +108,7 @@ Fin Funcion
 Funcion cifrar
 	Escribir "Para comenzar se requiere que tenga al menos dos llaves de cifrado a la mano."
 	Escribir "Si no las tiene, genérelas en el menú anterior. Puede escapar de esta pantalla en todo momento digitando: X"
-	Escribir "Presione una tecla para continuar.."
-	Esperar Tecla
+	pausa(Falso)
 	Definir entrada, llave1, llave2 como cadena
 	llave1 = ""
 	llave2 = ""
@@ -123,9 +126,8 @@ Funcion cifrar
 			Leer entrada
 			si entrada = llave1 Entonces
 				Escribir "Ingrese una llave diferente a la primera."
-				Escribir "Presione una tecla para continuar:"
+				pausa(Falso)
 				entrada = ""
-				Esperar Tecla
 			FinSi
 		Hasta Que validar_llave(entrada) o Mayusculas(entrada) = "X"
 		Si Mayusculas(entrada) <> "X" Entonces
@@ -147,8 +149,7 @@ Funcion cifrar
 		Escribir "El programa sólo acepta los siguientes caracteres alfanuméricos: " + "AaBbCcDdEeFfGgHhIiJjKkLlMmNnÑñOoPpQqRrsSTtUuVvWwXxYyZz0123456789"
 		Escribir "El programa omitirá caracteres no contenidos en los anteriores casos."
 		Escribir "El uso de llaves aleatorias puede generar cadenas de texto indecifrables. [DEBE USAR ÚNICAMENTE LLAVES GENERADAS EN ESTE PROGRAMA]"
-		Escribir "Presione para continuar.."
-		Esperar Tecla
+		pausa(Falso)
 		Repetir
 			Limpiar Pantalla
 			dato = ""
@@ -189,10 +190,7 @@ Funcion cifrar
 							final = eliminar_espacios(final)
 							Escribir  "Su texto fue cifrado y sólo podrá ser recuperado con dos de las tres llaves, su mensaje ahora es:"
 							Escribir final
-							Escribir ""
-							Escribir "Presione una tecla para volver al inicio.."
-							Esperar Tecla
-							Limpiar Pantalla
+							pausa(Verdadero)
 						FinSi
 					"N":
 						entrada = ""
@@ -243,9 +241,7 @@ Fin Funcion
 //Menu real
 Funcion real_menu
 	Escribir "AVISO: USTED A INGRESADO AL MODO SECRETO"
-	Escribir "Presione cualquier tecla para comenzar.."
-	Esperar Tecla
-	Limpiar Pantalla
+	pausa(Verdadero)
 	Definir menu como cadena
 	Repetir
 		Escribir "Ingrese una opción:"
@@ -264,9 +260,7 @@ Funcion real_menu
 				keygen()
 				Escribir ""
 				Escribir "Resguarde sus llaves en un lugar seguro. Recuerde que se requieren al menos dos llaves para cifrar y decifrar."
-				Escribir "Presione una tecla para volver al inicio.."
-				Esperar Tecla
-				Limpiar Pantalla
+				pausa(Verdadero)
 			"CIFRAR":
 				Limpiar Pantalla
 				cifrar()
@@ -287,9 +281,7 @@ Fin Funcion
 //Menu tapadera
 Funcion  falso_menu
 	Escribir "Bienvenido al proyecto de Jonatán Salgado Razo"
-	Escribir "Presione cualquier tecla para comenzar.."
-	Esperar Tecla
-	Limpiar Pantalla
+	pausa(Verdadero)
 	Definir menu como cadena
 	Repetir
 		Escribir "Ingrese una opción:"
@@ -321,15 +313,13 @@ Funcion  falso_menu
 				Escribir "Lea atentamente:"
 				Escribir "El objetivo de este programa es brindar un ambiente seguro para la obtención de la hora y fecha, así como brindar al usuario de un menú agradable e intuitivo en el cuál pueda TECLEAR sus opciones facilmente."
 				Escribir "El correcto funcionamiento de este producto no es un SECRETO, ya que puede consultarse en el reporte de la práctica, se recomienda consultarlo antes de usarse."
-				Escribir ""
-				Escribir "Presione cualquier tecla para continuar.."
-				Esperar Tecla
-				Limpiar Pantalla
+				pausa(Verdadero)
 			"SALIR":
 				menu = Mayusculas(menu)
 			De Otro Modo:
 				Limpiar Pantalla
 				Escribir "ATENCIÓN: OPCIÓN INVÁLIDA"
+				Escribir ""
 		Fin Segun
 	Hasta Que menu = "SALIR"
 Fin Funcion
@@ -688,23 +678,13 @@ Algoritmo proyecto
 	falso_menu()	
 	Limpiar Pantalla
 	Escribir "A CONTINUACIÓN LAS PRUEBAS UNITARIAS"
-	Escribir "Presione una tecla para continuar.."
-	Esperar Tecla
-	Limpiar Pantalla
+	pausa(Verdadero)
 	prueba1()
-	Escribir "Presione una tecla para continuar.."
-	Esperar Tecla
-	Limpiar Pantalla
+	pausa(Verdadero)
 	prueba2()
-	Escribir "Presione una tecla para continuar.."
-	Esperar Tecla
-	Limpiar Pantalla
+	pausa(Verdadero)
 	prueba3()
-	Escribir "Presione una tecla para continuar.."
-	Esperar Tecla
-	Limpiar Pantalla
+	pausa(Verdadero)
 	prueba4()
-	Escribir "Presione una tecla para continuar.."
-	Esperar Tecla
-	Limpiar Pantalla
+	pausa(Verdadero)
 FinAlgoritmo
