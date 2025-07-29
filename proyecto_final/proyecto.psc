@@ -51,16 +51,16 @@ Funcion decifrar
 			dato = ""
 			Escribir "Ingrese una linea de texto encriptada o digite & para salir:"
 			Leer entrada
-			//exploit Pseint
-			entrada = limpiar_cadena(entrada, diccionario)
-			entrada = limpiar_cadena(entrada, diccionario)
-			entrada = limpiar_cadena(entrada, diccionario)
-			entrada = limpiar_cadena(entrada, diccionario)
-			Si entrada <> "" Entonces
+			si entrada <> "&" Entonces
+				entrada = limpiar_cadena(entrada, diccionario)
+				entrada = eliminar_espacios(entrada)
+			SiNo
+				Limpiar Pantalla
+			FinSi
+			Si entrada <> "" y entrada <> "&" Entonces
 				Repetir
 					Limpiar Pantalla
 					Escribir "El programa considerará la siguiente linea:"
-					entrada = limpiar_cadena(entrada, diccionario)
 					Escribir entrada
 					Escribir ""
 					Escribir "¿Desea continuar? [S/N]"
@@ -70,7 +70,6 @@ Funcion decifrar
 					"S":
 						//DECRYPT
 						Limpiar Pantalla
-						entrada = formato_espacios(entrada)
 						//Calculo de polinomio
 						Dimension coordenadas[2]
 						obtener_coordenadas(llave1, llave2, coordenadas)
@@ -147,7 +146,7 @@ Funcion cifrar
 		Escribir "El programa sólo acepta los siguientes caracteres especiales: " + "¿?!¡*+-=/@#%$_.:;,()[]{}"
 		Escribir "El programa sólo acepta los siguientes caracteres alfanuméricos: " + "AaBbCcDdEeFfGgHhIiJjKkLlMmNnÑñOoPpQqRrsSTtUuVvWwXxYyZz0123456789"
 		Escribir "El programa omitirá caracteres no contenidos en los anteriores casos."
-		Escribir "El uso de llaves aleatorias generará cadenas de texto indecifrables. [DEBE USAR ÚNICAMENTE LLAVES GENERADAS EN ESTE PROGRAMA]"
+		Escribir "El uso de llaves aleatorias puede generar cadenas de texto indecifrables. [DEBE USAR ÚNICAMENTE LLAVES GENERADAS EN ESTE PROGRAMA]"
 		Escribir "Presione para continuar.."
 		Esperar Tecla
 		Repetir
@@ -155,16 +154,15 @@ Funcion cifrar
 			dato = ""
 			Escribir "Ingrese una linea de texto o digite & para salir:"
 			Leer entrada
-			//exploit Pseint
-			entrada = limpiar_cadena(entrada, diccionario)
-			entrada = limpiar_cadena(entrada, diccionario)
-			entrada = limpiar_cadena(entrada, diccionario)
-			entrada = limpiar_cadena(entrada, diccionario)
-			Si entrada <> "" Entonces
+			si entrada <> "&" Entonces
+				entrada = limpiar_cadena(entrada, diccionario)
+			SiNo
+				Limpiar Pantalla
+			FinSi
+			Si entrada <> "" y entrada <> "&" Entonces
 				Repetir
 					Limpiar Pantalla
 					Escribir "El programa considerará la siguiente linea:"
-					entrada = limpiar_cadena(entrada, diccionario)
 					Escribir entrada
 					Escribir ""
 					Escribir "¿Desea continuar? [S/N]"
@@ -188,6 +186,7 @@ Funcion cifrar
 							final = ""
 							encriptar_cadena(newcadena, coordenadas, final)
 							final = limpiar_cadena(final, "0123456789")
+							final = eliminar_espacios(final)
 							Escribir  "Su texto fue cifrado y sólo podrá ser recuperado con dos de las tres llaves, su mensaje ahora es:"
 							Escribir final
 							Escribir ""
@@ -297,21 +296,35 @@ Funcion  falso_menu
 		Escribir ""
 		Escribir "HORA: Para obtener la hora local."
 		Escribir "FECHA: Para obtener la fecha."
+		Escribir "AYUDA: Para obtener una descripción útil."
 		Escribir "SALIR: Para obtener la salir del programa."
+		Escribir ""
 		Leer menu
 		Segun Mayusculas(menu) Hacer
 			"HORA":
 				Limpiar Pantalla
+				Escribir ""
 				Escribir "La hora exacta es: " + Subcadena(ConvertirATexto(HoraActual()),1,2) + ":" + Subcadena(ConvertirATexto(HoraActual()),3,4)
 				Escribir ""
 			"FECHA":
 				Limpiar Pantalla
+				Escribir ""
 				Escribir "La fecha de hoy es: " + Subcadena(ConvertirATexto(FechaActual()),7,8) + "/" + Subcadena(ConvertirATexto(FechaActual()),5,6) + "/" + Subcadena(ConvertirATexto(FechaActual()),1,4)
 				Escribir ""
 			"SECRETO":
 				Limpiar Pantalla
 				//inicia la fiesta
 				real_menu()
+			"AYUDA":
+				Limpiar Pantalla
+				Escribir "Este programa es el proyecto de Jonatán Salgado Razo."
+				Escribir "Lea atentamente:"
+				Escribir "El objetivo de este programa es brindar un ambiente seguro para la obtención de la hora y fecha, así como brindar al usuario de un menú agradable e intuitivo en el cuál pueda TECLEAR sus opciones facilmente."
+				Escribir "El correcto funcionamiento de este producto no es un SECRETO, ya que puede consultarse en el reporte de la práctica, se recomienda consultarlo antes de usarse."
+				Escribir ""
+				Escribir "Presione cualquier tecla para continuar.."
+				Esperar Tecla
+				Limpiar Pantalla
 			"SALIR":
 				menu = Mayusculas(menu)
 			De Otro Modo:
@@ -321,29 +334,44 @@ Funcion  falso_menu
 	Hasta Que menu = "SALIR"
 Fin Funcion
 
+//funcion eliminar espacios
+Funcion chain <- eliminar_espacios ( chain )
+	chain = formato_espacios(chain)
+	i = 1
+	Mientras i < Longitud(chain) Hacer
+		si Subcadena(chain, i, i) = " " Entonces
+			chain = Subcadena(chain, 1, i-1) + Subcadena(chain, i+1, Longitud(chain))
+		SiNo
+			i = i + 1
+		FinSi
+	FinMientras
+FinFuncion
+
 //Funcion de restricción de caracteres
 Funcion newchain <- limpiar_cadena ( chain, dic )
 	newchain = formato_espacios(chain)
-	Para i<-1 Hasta Longitud(newchain) Con Paso 1 Hacer
+	i = 0
+	Mientras i < Longitud(newchain) Hacer
+		i = i + 1
 		bandera_caracter = Falso
 		Para j<-1 Hasta Longitud(dic) Con Paso 1 Hacer
 			si (Subcadena(newchain, i, i) = Subcadena(dic, j, j)) O (Subcadena(newchain, i, i) = " ") Entonces
-				bandera_caracter = Verdadero				
+				bandera_caracter = Verdadero
 			FinSi
 		Fin Para
 		si bandera_caracter = Falso Entonces
 			si i = 1 o i = Longitud(newchain) Entonces
 				si i = 1 Entonces
-					newchain = Subcadena(newchain, i+1, Longitud(newchain))
+					newchain = " " + Subcadena(newchain, i+1, Longitud(newchain))
 				FinSi
 				si i = Longitud(newchain) Entonces
-					newchain = Subcadena(newchain, 1, i-1)
+					newchain = Subcadena(newchain, 1, i-1) + " "
 				FinSi
 			SiNo
-				newchain = Subcadena(newchain, 1, i-1) + Subcadena(newchain, i+1, Longitud(newchain))
+				newchain = Subcadena(newchain, 1, i-1) + " " + Subcadena(newchain, i+1, Longitud(newchain))
 			FinSi
 		FinSi
-	Fin Para
+	Fin Mientras
 	newchain = formato_espacios(newchain)
 Fin Funcion
 
@@ -420,7 +448,7 @@ Funcion newchain <- desencriptar_fragmento ( chain, coord )
 	FinSi
 Fin Funcion
 
-//Obtención de coordenadas según las dos llaves //VALIDAR 0ros
+//Obtención de coordenadas según las dos llaves
 Funcion obtener_coordenadas ( llave_1, llave_2, coord)
 	i = 1
 	Mientras Subcadena(llave_1, i, i) <> "_" Hacer
@@ -480,9 +508,13 @@ Funcion newchain <- traductor_cadena_numero ( chain , dic, exept Por Referencia)
 	Para i<-1 Hasta Longitud(chain) Con Paso 1 Hacer
 		si Subcadena(chain,i,i) <> " " Entonces
 			j = 1
-			Mientras Subcadena(chain,i,i) <> Subcadena(dic, j, j)  Hacer
+			Mientras (Subcadena(chain,i,i) <> Subcadena(dic, j, j)) Y (j < Longitud(dic) + 1) Hacer
 				j = j + 1
 			Fin Mientras
+			//Validacion Por fuera del diccionario
+			si j = Longitud(dic) + 1 Entonces
+				j = 0
+			FinSi
 			Si j < 10 Entonces
 				newchain = newchain + "0" + ConvertirATexto(j)
 			SiNo
@@ -530,6 +562,149 @@ Funcion newchain <- traductor_numero_cadena ( chain, dic )
 	FinSi
 Fin Funcion
 
+
+///PRUEBAS UNITARIAS
+Funcion prueba1
+	Escribir "PRUEBA:  Funcion newchain <- traductor_cadena_numero ( chain , dic, exept Por Referencia)"
+	Escribir "Función que genera una cadena de caracteres compuesta por numeros, a partir de una cadena de texto según un diccionario y que señaliza si una palabra posee más de 240 caracteres"
+	Escribir "PARÁMETROS: "
+	Escribir "chain - cadena: La cadena de texto que se traduce a numero"
+	Escribir "dic - cadena: Una cadena de texto con los caracteres que restringen a chain"
+	Escribir "except - booleano (Por referencia): Cambia el valor de una bandera a Verdadero si alguna palabra contiene más de 240 caracteres"
+	Escribir "RETORNO: "
+	Escribir "newchain - cadena: Una cadena de texto conformada sólo por números, usando un Byte Order Mark de 3 bytes para cada palabra"
+	Escribir ""
+	Esperar 1 segundos
+	Definir excepcion Como Logico
+	Escribir "Assert: TRUE"
+	Escribir "Se define una variable de excepción <<except>> como Falso"
+	excepcion = Falso
+	Escribir "Se invoca a la función traductor_cadena_numero, con los siguientes parámetros"
+	Escribir "chain: <<Holaaa Mundooo! :3>>", " ", "dic: <<HMadlnou3!: >>"
+	Escribir "(todos los caracteres de chain estan en dic)"
+	Escribir "El resultado de la prueba"
+	Escribir "newchain: <<",traductor_cadena_numero("Holaaa Mundooo! :3", "HMadlnou3!: ", excepcion), ">> ", " except: <<",excepcion, ">>"
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: FALSE"
+	Escribir "Se define una variable de excepción <<except>> como Verdadero"
+	excepcion = Verdadero
+	Escribir "Se invoca a la función traductor_cadena_numero, con los siguientes parámetros"
+	Escribir "chain: <<Holaaa Mundooo! :3>>", " ", "dic: <<pbc012>>"
+	Escribir "(ninguno de los caracteres de chain estan en dic)"
+	Escribir "El resultado de la prueba"
+	Escribir "newchain: <<",traductor_cadena_numero("Holaaa Mundooo! :3", "pbc012", excepcion), ">> ", " except: <<",excepcion, ">>"
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: TRUE"
+	Escribir "Se define una variable de excepción <<except>> como Falso"
+	excepcion = Falso
+	Escribir "Se invoca a la función traductor_cadena_numero, con los siguientes parámetros"
+	Escribir "chain: <<a>>*241 (241 caracteres <<a>>)", " ", "dic: <<a>>"
+	Escribir "(ninguno de los caracteres de chain estan en dic)"
+	Escribir "El resultado de la prueba"
+	Escribir "newchain: <<",traductor_cadena_numero("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "a", excepcion), ">> ", " except: <<",excepcion, ">>"
+	Escribir ""
+FinFuncion
+
+Funcion prueba2
+	Escribir "PRUEBA:  Funcion chain <- formato_espacios ( chain )"
+	Escribir "Función que reformatea una cadena de texto con un sólo espacio entre palabras y ningun espacio a los extremos, a partir de una cadena de texto inicial"
+	Escribir "PARÁMETROS: "
+	Escribir "chain - cadena: La cadena de texto que quiere formatear"
+	Escribir "RETORNO: "
+	Escribir "chain - cadena: La cadena de texto reformateada"
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: TRUE"
+	Escribir "Se invoca a la función formato_espacios, con los siguientes parámetros"
+	Escribir "chain: <<    Holaaa     a    todo          el   Mundooo!   :3    >>"
+	Escribir "El resultado de la prueba"
+	Escribir "chain: <<",formato_espacios("    Holaaa     a    todo          el   Mundooo!   :3    "), ">> "
+	Escribir ""
+FinFuncion
+
+Funcion prueba3
+	Escribir "PRUEBA:  Funcion newchain <- traductor_numero_cadena ( chain , dic)"
+	Escribir "Función que genera una cadena de caracteres a partir de una cadena de texto compuesta por números según un diccionario"
+	Escribir "PARÁMETROS: "
+	Escribir "chain - cadena: La cadena de texto compuesta solo por números que se traduce a caracteres"
+	Escribir "dic - cadena: Una cadena de texto con los caracteres que restringen a chain"
+	Escribir "RETORNO: "
+	Escribir "newchain - cadena: Una cadena de texto resultado de la traduccion"
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: TRUE"
+	Escribir "Se invoca a la función traductor_numero_cadena, con los siguientes parámetros"
+	Escribir "chain: <<00601070503030300802080604070707100021109>>", " ", "dic: <<HMadlnou3!: >>"
+	Escribir "(los caracteres de chain no exceden el dic)"
+	Escribir "El resultado de la prueba"
+	Escribir "newchain: <<",traductor_numero_cadena("00601070503030300802080604070707100021109", "HMadlnou3!: "), ">> "
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: FALSE"
+	Escribir "Se invoca a la función traductor_numero_cadena, con los siguientes parámetros"
+	Escribir "chain: <<0050405060708>>", " ", "dic: <<abc>>"
+	Escribir "(los caracteres de chain exceden el dic)"
+	Escribir "El resultado de la prueba"
+	Escribir "newchain: <<",traductor_numero_cadena("00104", "abc"), ">> "
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: FALSE"
+	Escribir "Se invoca a la función traductor_numero_cadena, con los siguientes parámetros"
+	Escribir "chain: <<123>>", " ", "dic: <<abc>>"
+	Escribir "(los caracteres de chain no tiene el formato del traductor)"
+	Escribir "El resultado de la prueba"
+	Escribir "newchain: <<",traductor_numero_cadena("123", "abc"), ">> "
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: FALSE"
+	Escribir "Se invoca a la función traductor_numero_cadena, con los siguientes parámetros"
+	Escribir "chain: <<asdf>>", " ", "dic: <<abc>>"
+	Escribir "(los caracteres de chain no tiene el formato del traductor)"
+	Escribir "El resultado de la prueba"
+	Escribir "newchain: <<","<ERROR DE TIPO DE VALOR>", ">> "
+	Escribir ""
+FinFuncion
+
+Funcion prueba4
+	Escribir "PRUEBA:  Funcion chain <- eliminar_espacios ( chain )"
+	Escribir "Función que elimina todos los espacios de una cadena de texto"
+	Escribir "PARÁMETROS: "
+	Escribir "chain - cadena: La cadena de texto que se le eliminan los espacios"
+	Escribir "RETORNO: "
+	Escribir "chain - cadena: La cadena de texto sin espacios"
+	Escribir ""
+	Esperar 1 segundos
+	Escribir "Assert: TRUE"
+	Escribir "Se invoca a la función formato_espacios, con los siguientes parámetros"
+	Escribir "chain: <<    Holaaa     a    todo          el   Mundooo!   :3    >>"
+	Escribir "El resultado de la prueba"
+	Escribir "chain: <<",eliminar_espacios("    Holaaa     a    todo          el   Mundooo!   :3    "), ">> "
+	Escribir ""
+FinFuncion
+
 Algoritmo proyecto
-	falso_menu()
+	falso_menu()	
+	Limpiar Pantalla
+	Escribir "A CONTINUACIÓN LAS PRUEBAS UNITARIAS"
+	Escribir "Presione una tecla para continuar.."
+	Esperar Tecla
+	Limpiar Pantalla
+	prueba1()
+	Escribir "Presione una tecla para continuar.."
+	Esperar Tecla
+	Limpiar Pantalla
+	prueba2()
+	Escribir "Presione una tecla para continuar.."
+	Esperar Tecla
+	Limpiar Pantalla
+	prueba3()
+	Escribir "Presione una tecla para continuar.."
+	Esperar Tecla
+	Limpiar Pantalla
+	prueba4()
+	Escribir "Presione una tecla para continuar.."
+	Esperar Tecla
+	Limpiar Pantalla
 FinAlgoritmo
