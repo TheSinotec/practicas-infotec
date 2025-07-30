@@ -1,24 +1,92 @@
+Funcion valido <- validar_cadena ( chain, dic )
+	//Funcion auxiliar de validación de caracteres, dado un diccionario de caracteres
+	//Se crea una bandera para validare cadena
+	valido = Verdadero
+	i = 0
+	//Ciclo para validar caracteres de la cadena
+	Mientras i < Longitud(chain) Hacer
+		i = i + 1
+		//Se inicializa bandera de caracter en Falso
+		validar_caracter = Falso
+		//Ciclo para recorrer el diccionario
+		Para j<-1 Hasta Longitud(dic) Con Paso 1 Hacer
+			//Se verifica si el caracter está en el diccionario
+			si Subcadena(chain,i,i) = Subcadena(dic, j, j) Entonces
+				//si esta se marca
+				validar_caracter = Verdadero
+			FinSi
+		Fin Para
+		//Si la bandera es falsa, es un caracter que no está en el diccionario
+		si validar_caracter = Falso Entonces
+			//Si hay un caracter que no está en la cadena, la cadena es invalida
+			valido = Falso
+			//escape
+			i = i + Longitud(chain)
+		FinSi
+	Fin Mientras
+Fin Funcion
+
+Funcion cantidad <- contar_caracter ( chain, char )
+	//Funcion para contar repeticiones de caracter en una cadena
+	cantidad = 0
+	//Ciclo para recorrer la cadena y buscar caracter
+	Para i<-1 Hasta Longitud(chain) Con Paso 1 Hacer
+		//Si se encuentra el carracter se cuenta
+		si Subcadena(chain,i,i) = char Entonces
+			//contador
+			cantidad = cantidad + 1
+		FinSi
+	Fin Para
+FinFuncion
+
 Algoritmo duplicados
 	//Algoritmo para generar un sub arreglo con los elementos duplicados de un arreglo dado por teclado.
 	//Se inicializa un entero para contener la cantidad de elementos del arreglo
 	Definir n Como Entero
+	//Se define una entrada de texto
+	Definir entrada como cadena
 	//Mensaje de inicio del ususario
 	Escribir "Este algortmo genera un sub-arreglo con los elementos repetidos de un arreglo dado."
 	//Ciclo-validación del valor de n>0
 	Repetir
 		Escribir "Introduzca la cantidad de elementos deseado en su arreglo, debe ser un entero positivo:"
-		//Se lee n y se limpia pantalla
-		Leer n
+		//Se lee la entrada de texto y se limpia pantalla
+		Leer entrada
 		Limpiar Pantalla
+		//Validacion de cantidad
+		si validar_cadena(entrada, "1234567890") Y (entrada <> "0") Entonces
+			n = ConvertirANumero(entrada)
+		SiNo
+			n = 0
+		FinSi
 	Hasta Que n>0;
 	//Se define un arreglo de n elementos para almacenar el arreglo inicial
-	Dimension inicial[n]
+	Dimension inicial[n] 
 	//Ciclo para pedir los n elementos al usuario
 	Para i<-1 Hasta n Con Paso 1 Hacer
-		//Mensaje y lectura de cada uno de los elementos del arreglo inicial
-		Escribir "Ingrese el elemento #", i, " del arreglo:"
-		Leer inicial[i]
-		Escribir ""
+		//Ciclo-validación del valor de cada elemento
+		Repetir
+			//Mensaje y lectura de cada uno de los elementos del arreglo inicial
+			Escribir "Ingrese el elemento #", i, " del arreglo:"
+			//Se lee la entrada para validación
+			Leer entrada
+			Escribir ""
+			Limpiar Pantalla
+			//Validacion de enteros
+			si no validar_cadena(entrada, "1234567890-") Entonces
+				entrada = ""
+			FinSi
+			//Validacion de enteros negativos
+			si ((contar_caracter(entrada, "-") = 1) Y (Subcadena(entrada,1,1) <> "-")) o (entrada = "-") Entonces
+				entrada = ""
+			FinSi
+			//validacion -0 <> 0
+			si entrada = "-0" Entonces
+				entrada = "0"
+			FinSi
+		Hasta Que entrada <> "";
+		//Se guarda el valor
+		inicial[i] = ConvertirANumero(entrada)
 	Fin Para
 	Limpiar Pantalla
 	//Defino una matriz de nx2 para contener cada elemento y sus repeticiones
@@ -36,7 +104,7 @@ Algoritmo duplicados
 		//Ciclo que lleva observa el contador y el elemento actual de inicial para ver si se repite
 		Para j<-1 Hasta maximo Con Paso 1 Hacer
 			//Si la matriz contador contiene ya al i-esimo elemento, la bandera se modifica a verdadero
-			si contador[j,1] = inicial[i] Entonces
+			si (contador[j,1] = inicial[i]) Y (contador[j,2] <> 0) Entonces
 				bandera = Verdadero				
 			FinSi
 		Fin Para
