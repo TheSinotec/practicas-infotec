@@ -1,54 +1,95 @@
-//Funcion auxiliar para calcular el monto máximo posible del dispensador
-//Recibe el inventario y regresa el monto máximo como entero
+Funcion valido <- validar_cadena ( chain, dic )
+	//Funcion auxiliar de validaciÃ³n de caracteres, dado un diccionario de caracteres
+	//Se crea una bandera para validare cadena
+	valido = Verdadero
+	i = 0
+	//Ciclo para validar caracteres de la cadena
+	Mientras i < Longitud(chain) Hacer
+		i = i + 1
+		//Se inicializa bandera de caracter en Falso
+		validar_caracter = Falso
+		//Ciclo para recorrer el diccionario
+		Para j<-1 Hasta Longitud(dic) Con Paso 1 Hacer
+			//Se verifica si el caracter estÃ¡ en el diccionario
+			si Subcadena(chain,i,i) = Subcadena(dic, j, j) Entonces
+				//si esta se marca
+				validar_caracter = Verdadero
+			FinSi
+		Fin Para
+		//Si la bandera es falsa, es un caracter que no estÃ¡ en el diccionario
+		si validar_caracter = Falso Entonces
+			//Si hay un caracter que no estÃ¡ en la cadena, la cadena es invalida
+			valido = Falso
+			//escape
+			i = i + Longitud(chain)
+		FinSi
+	Fin Mientras
+Fin Funcion
+
+Funcion cantidad <- contar_caracter ( chain, char )
+	//Funcion para contar repeticiones de caracter en una cadena
+	cantidad = 0
+	//Ciclo para recorrer la cadena y buscar caracter
+	Para i<-1 Hasta Longitud(chain) Con Paso 1 Hacer
+		//Si se encuentra el carracter se cuenta
+		si Subcadena(chain,i,i) = char Entonces
+			//contador
+			cantidad = cantidad + 1
+		FinSi
+	Fin Para
+FinFuncion
+
+//Funcion auxiliar para calcular el monto mÃ¡ximo posible del dispensador
+//Recibe el inventario y regresa el monto mÃ¡ximo como entero
 Funcion maximo <- calcular_maximo ( inv por referencia )
-	//Se define el valor máxmimo como entero y se inicializa en cero
+	//Se define el valor mÃ¡xmimo como entero y se inicializa en cero
 	Definir maximo Como Entero
 	maximo = 0
-	//Ciclo para obtener el monto máximo del inventario
+	//Ciclo para obtener el monto mÃ¡ximo del inventario
 	Para i<-1 Hasta 6 Con Paso 1 Hacer
 		//Se multiplican valores por existencias y se hace el acumulado
 		maximo = maximo + inv[i,1]*inv[i,2]
 	Fin Para
 Fin Funcion
 
-//Funcion auxiliar que genera la operación de retiro
+//Funcion auxiliar que genera la operaciÃ³n de retiro
 //Recibe una cantidad y un inventario, y no regresa nada
 Funcion retirar ( cant Por Referencia, inv por referencia )
-	//Se definen dos arreglos de 6 elementos. indicador, para almacenar la cantidad de existencias empleada en cada paso de la operación
+	//Se definen dos arreglos de 6 elementos. indicador, para almacenar la cantidad de existencias empleada en cada paso de la operaciÃ³n
 	Dimension indicador[6]
-	//Se definen dos cantidades enteras: total, para generar una copia del valor ingresado; j, para el entero mínimo anterior acota la cantidad dada
+	//Se definen dos cantidades enteras: total, para generar una copia del valor ingresado; j, para el entero mÃ­nimo anterior acota la cantidad dada
 	Definir j, total Como Entero
 	//se genera una copia de la cantidad dada
 	total = cant
-	//Ciclo para "tomar" billetes desde las denominaciones más altas
+	//Ciclo para "tomar" billetes desde las denominaciones mÃ¡s altas
 	Para i<-6 Hasta 1 Con Paso -1 Hacer
-		//Se hace la división entera de la cantidad por la denominación
+		//Se hace la divisiÃ³n entera de la cantidad por la denominaciÃ³n
 		j = trunc(cant/inv[i,1])
 		//Condicional que valida la cantidad de existencias
 		si j >= inv[i,2] Entonces
-			//Si no hay existencia suficiente a la necesaria, se toma el máximo de existencia
+			//Si no hay existencia suficiente a la necesaria, se toma el mÃ¡ximo de existencia
 			indicador[i] = inv[i,2]
 		SiNo
-			//Si hay existencias suficientes se toma lo necesario únicamente
+			//Si hay existencias suficientes se toma lo necesario Ãºnicamente
 			indicador[i] = j
 		FinSi
 		//Se le resta a la cantidad el valor acumulado de los billetes a retirar
 		cant = cant - inv[i,1] * indicador[i] 
 	Fin Para
-	//Condicional que evalúa el resto de la operación y con base en ello cancela o mantiene la operación
+	//Condicional que evalÃºa el resto de la operaciÃ³n y con base en ello cancela o mantiene la operaciÃ³n
 	si cant = 0 Entonces
-		//Si el resto es cero, hay existencias y denominaciones para la operación. Se borra la pantalla y se manda mensaje de exito
+		//Si el resto es cero, hay existencias y denominaciones para la operaciÃ³n. Se borra la pantalla y se manda mensaje de exito
 		Limpiar Pantalla
-		Escribir "OPERACION EXITOSA: A continuación se hace un desglose del movimiento."
+		Escribir "OPERACION EXITOSA: A continuaciÃ³n se hace un desglose del movimiento."
 		Escribir ""
-		//Ciclo para presentar el desglose de la operación
+		//Ciclo para presentar el desglose de la operaciÃ³n
 		Para i<-1 Hasta 6 Con Paso 1 Hacer
-			//Condicional que no envía denominaciones no usadas
+			//Condicional que no envÃ­a denominaciones no usadas
 			si indicador[i] <> 0 Entonces
 				//Se presentan las denominaciones usadas y el acumulado
 				Escribir indicador[i], " * $", inv[i,1], " = $", indicador[i]*inv[i,1]
 			FinSi
-			//Se actualiza el inventario con el resto de la operación
+			//Se actualiza el inventario con el resto de la operaciÃ³n
 			inv[i,2] = inv[i,2] - indicador[i]
 		Fin Para
 		//se muestra el valor total
@@ -56,16 +97,16 @@ Funcion retirar ( cant Por Referencia, inv por referencia )
 		Escribir "TOTAL: $", total
 		Escribir ""
 	SiNo
-		//Se limpia pantalla y se muestra el mensaje de operación cancelada, no se actualiza el inventario
+		//Se limpia pantalla y se muestra el mensaje de operaciÃ³n cancelada, no se actualiza el inventario
 		Limpiar Pantalla
-		Escribir "OPERACION CANCELADA: El cajero no dispone con las denominaciones necesarias para cumplir su petición."
+		Escribir "OPERACION CANCELADA: El cajero no dispone con las denominaciones necesarias para cumplir su peticiÃ³n."
 		Escribir "Ningun billete fue retirado de su cuenta."
 		Escribir ""
 	FinSi
 Fin Funcion
 
-//Función que muestra en pantalla el inventario actual
-//Recibe el inventario como parámetro y no regresa ningun valor
+//FunciÃ³n que muestra en pantalla el inventario actual
+//Recibe el inventario como parÃ¡metro y no regresa ningun valor
 Funcion mostrar_inventario ( inv Por Referencia )
 	//Se limpia la pantalla y se recorre el inventario, mostrando denominaciones y existencias
 	Limpiar Pantalla
@@ -93,68 +134,76 @@ Algoritmo dispensadora_billetes
 			x = 10
 		FinSi
 	FinPara
-	//Se define maximo_retiro como entero, un valor que representa el valor máxmimo que contiene el inventario
+	//Se define maximo_retiro como entero, un valor que representa el valor mÃ¡xmimo que contiene el inventario
 	Definir maximo_retiro Como Entero
 	//Se define la cantidad a ingresar como valor real para evitar confusiones de punto decimal (100.00)
 	Definir cantidad Como Real
 	//Se presenta el cajero
-	Escribir "Bienvenido al cajero, para empezar, digite una clave del menú."
-	//Se define una variable menú como cadena, para recibir la entrada del usuario
-	Definir menu como cadena
-	//Ciclo para mantener en el menú hasta que la instrucción sea "SALIR"
+	Escribir "Bienvenido al cajero, para empezar, digite una clave del menÃº."
+	//Se define una variable menu y entrada como cadena, para recibir la entrada del usuario
+	Definir menu, entrada como cadena
+	//Ciclo para mantener en el menÃº hasta que la instrucciÃ³n sea "SALIR"
 	Repetir
-		//Se manda mensaje del menú principal
-		Escribir "Elija una opción."
+		//Se manda mensaje del menÃº principal
+		Escribir "Elija una opciÃ³n."
 		Escribir "INVENTARIO: Para consultar la existencia de billetes."
 		Escribir "RETIRAR: Para retirar efectivo."
-		Escribir "SALIR: Para finalizar la transacción."
+		Escribir "SALIR: Para finalizar la transacciÃ³n."
 		Escribir ""
 		//Se lee la respuesta del usuario
 		Leer menu
-		//Switch para verificar las opciones dadas por la variable leída (menu). Se ignoran MAYUS/MINUS
+		//Switch para verificar las opciones dadas por la variable leÃ­da (menu). Se ignoran MAYUS/MINUS
 		Segun Mayusculas(menu) Hacer
 			"INVENTARIO":
-				//Llama a la función mostrar_inventario con el inventario actual, para mostrar inventario actual
+				//Llama a la funciÃ³n mostrar_inventario con el inventario actual, para mostrar inventario actual
 				mostrar_inventario(inventario)
 			"RETIRAR":
-				//Se calcula el monto máximo de retiro mediante la fucnión calcular_máximo según el inventario actual
+				//Se calcula el monto mÃ¡ximo de retiro mediante la fucniÃ³n calcular_mÃ¡ximo segÃºn el inventario actual
 				maximo_retiro = calcular_maximo(inventario)
 				Limpiar Pantalla
-				//Ciclo de recepción de cantidad y validación de valores, cantidad debe ser positivo
+				//Ciclo de recepciÃ³n de cantidad y validaciÃ³n de valores, cantidad debe ser positivo
 				Repetir
 					//Mensaje al usuario
-					Escribir "Ingrese una cantidad a retirar (0 para volver al menú):"
-					//Se lee la cantidad de usuario (No se validan excepciones por tipos diferentes a número).
-					Leer cantidad
-					//Se valida si la opción del ususario es "0", que es a su vez un escape a la operación
+					Escribir "Ingrese una cantidad a retirar (0 para volver al menÃº):"
+					//Se lee la cantidad de usuario como texto.
+					Leer entrada
+					//ValidaciÃ³n de nÃºmero
+					si validar_cadena(entrada, "1234567890.") Y ( contar_caracter(entrada, ".") <= 1 ) Entonces
+						//Es cantidad
+						cantidad = ConvertirANumero(entrada)
+					SiNo
+						//Salida para volver a pedir la cantidad
+						cantidad = -1
+					FinSi
+					//Se valida si la opciÃ³n del ususario es "0", que es a su vez un escape a la operaciÃ³n
 					Si cantidad = 0 Entonces
-						//Se borra pantalla y se da un valor reservado fuera de la valicación interna para generar un escape de la validación
+						//Se borra pantalla y se da un valor reservado fuera de la valicaciÃ³n interna para generar un escape de la validaciÃ³n
 						Limpiar Pantalla
 						cantidad = 19000
 					SiNo
-						//Si no es el valor reservado "0", se considera una opción real y se valida.
+						//Si no es el valor reservado "0", se considera una opciÃ³n real y se valida.
 						//Se valida que sea valor entero, multiplo de 10 y mayor a 20
 						si (TRUNC(cantidad) <> cantidad) o (TRUNC(cantidad)%10 <> 0) o (TRUNC(cantidad) < 20) Entonces
-							//Si no cumple alguno de los criterios se manda una excepción y se pide de nuevo una cantidad
+							//Si no cumple alguno de los criterios se manda una excepciÃ³n y se pide de nuevo una cantidad
 							Limpiar Pantalla
 							//Se reinicia cantidad a 0
 							cantidad = 0
-							Escribir "Este cajero no emite centavos o cantidades que no sean múltiplo de $10 o menores que $20, intente una cantidad válida."
+							Escribir "Este cajero no emite centavos o cantidades que no sean mÃºltiplo de $10 o menores que $20, intente una cantidad vÃ¡lida."
 							Escribir ""
 						SiNo
-							//Si cumple los criterios, se valida que la cantidad no sea mayor al monto máximo del inventario
+							//Si cumple los criterios, se valida que la cantidad no sea mayor al monto mÃ¡ximo del inventario
 							si maximo_retiro < cantidad Entonces
 								//Se reinicia cantidad a 0
 								cantidad = 0
 								//Se validan dos casos
 								si maximo_retiro <> 0 Entonces
-									//Si la cantidad es mayor al monto máximo se manda el mensaje con el máximo
-									Escribir "Este cajero sólo dispone de $", maximo_retiro
-									Escribir  "La operación fue cancelada, intente nuevamente con otra cantidad"
+									//Si la cantidad es mayor al monto mÃ¡ximo se manda el mensaje con el mÃ¡ximo
+									Escribir "Este cajero sÃ³lo dispone de $", maximo_retiro
+									Escribir  "La operaciÃ³n fue cancelada, intente nuevamente con otra cantidad"
 								SiNo
-									//Si monto máximo es cero, se manda el error y se regresa al menu
+									//Si monto mÃ¡ximo es cero, se manda el error y se regresa al menu
 									Escribir "Este cajero NO TIENE FONDOS"
-									Escribir  "La operación fue cancelada."
+									Escribir  "La operaciÃ³n fue cancelada."
 									//valor reservado de escape
 									cantidad = 19000
 								FinSi
@@ -165,17 +214,17 @@ Algoritmo dispensadora_billetes
 				Hasta Que cantidad > 0
 				//Valida la cantidad reservada, si es 19000 se sale y vuelve al menu, si no, intenta retirar los fondos
 				si cantidad <> 19000
-					//Se llama a ña función retirar, con la cantidad validada y el inventario actual
+					//Se llama a Ã±a funciÃ³n retirar, con la cantidad validada y el inventario actual
 					retirar(cantidad,inventario)
 				FinSi
 			"SALIR":
-				//Actualiza menú para ignorar diferencias mayus/minus y para asegurar la salida del programa
+				//Actualiza menÃº para ignorar diferencias mayus/minus y para asegurar la salida del programa
 				menu = Mayusculas(menu)
 			De Otro Modo:
-				//Se manda mensaje de error por excepción
+				//Se manda mensaje de error por excepciÃ³n
 				Limpiar Pantalla
-				Escribir "La opción es incorrecta."
-				Escribir "Verifique en no colocar espacios y digitar correctamente las palabras del menú."
+				Escribir "La opciÃ³n es incorrecta."
+				Escribir "Verifique en no colocar espacios y digitar correctamente las palabras del menÃº."
 		Fin Segun
 	Hasta Que menu = "SALIR"
 FinAlgoritmo
