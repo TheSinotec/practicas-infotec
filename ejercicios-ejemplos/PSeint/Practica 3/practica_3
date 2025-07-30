@@ -1,0 +1,93 @@
+Funcion valido <- validar_cadena ( chain, dic )
+	//Funcion auxiliar de validación de caracteres, dado un diccionario de caracteres
+	valido = Verdadero
+	i = 0
+	Mientras i < Longitud(chain) Hacer
+		i = i + 1
+		validar_caracter = Falso
+		Para j<-1 Hasta Longitud(dic) Con Paso 1 Hacer
+			si Subcadena(chain,i,i) = Subcadena(dic, j, j) Entonces
+				validar_caracter = Verdadero
+			FinSi
+		Fin Para
+		si validar_caracter = Falso Entonces
+			valido = Falso
+			i = i + Longitud(chain)
+		FinSi
+	Fin Mientras
+Fin Funcion
+
+Funcion cantidad <- contar_caracter ( chain, char )
+	//Funcion para contar repeticiones de caracter en una cadena
+	cantidad = 0
+	Para i<-1 Hasta Longitud(chain) Con Paso 1 Hacer
+		si Subcadena(chain,i,i) = char Entonces
+			cantidad = cantidad + 1
+		FinSi
+	Fin Para
+FinFuncion
+
+Funcion area_triangulo
+	//Algoritmo para calcular e imprimir el área de un triángulo dada su base y altura por teclado. 
+	Definir base, altura Como Real;
+	Definir entrada como cadena;
+	Definir validacion Como Logico;
+	Repetir
+		Escribir "Recuerde ingresar valores válidos para un triángulo";
+		Escribir "Ingrese la base del triángulo";
+		Escribir "";
+		Leer entrada;
+		Si validar_cadena(entrada, "0123456789.") Y (contar_caracter(entrada, ".") <= 1) Entonces
+			base = ConvertirANumero(entrada)
+			Escribir "";
+			Escribir "Ingrese la altura del triángulo";
+			Escribir "";
+			Leer entrada;
+			Si validar_cadena(entrada, "0123456789.") Y (contar_caracter(entrada, ".") <= 1) Entonces
+				altura = ConvertirANumero(entrada)
+			SiNo
+				Limpiar Pantalla
+				Escribir "<<",entrada, ">> no es un numero válido. Intente de nuevo."
+				altura = 0.0
+			FinSi
+		SiNo
+			Limpiar Pantalla
+			Escribir "<<",entrada, ">> no es un numero válido. Intente de nuevo."
+			base = 0.0
+		FinSi
+	Hasta Que (base > 0.0) Y (altura > 0.0);
+	Escribir "El área del triángulo es: ", base*(altura/2);
+Fin Funcion
+
+Funcion  celsius_fahrenheit 
+	//Algoritmo para convierte e imprimir la temperatura en grados ºF, dada una temperatura en ºC por teclado. 
+	Definir celsius Como Real;
+	Definir entrada como cadena;
+	Repetir
+		//Limpiar Pantalla;
+		Escribir "Ingrese valores válidos de temperatura";
+		Escribir "";
+		Escribir "Ingrese su temperatura en ºC";
+		Escribir "";
+		Leer entrada;
+		Si validar_cadena(entrada, "0123456789.") Y (contar_caracter(entrada, ".") <= 1) Entonces
+			celsius = ConvertirANumero(entrada)
+		SiNo
+			Limpiar Pantalla
+			Escribir "<<",entrada, ">> no es un numero válido. Intente de nuevo."
+			celsius = -300.0
+		FinSi
+	Hasta Que (celsius >= -273.15);
+	Escribir celsius, "ºC de temperatura a ºF son: ", celsius*(9/5)+32.0, " ºF";
+Fin Funcion
+
+
+Algoritmo practica_3
+	area_triangulo
+	Escribir "";
+	Escribir "Fin de ejercicio 1";
+	Escribir "";
+	celsius_fahrenheit
+FinAlgoritmo
+
+
